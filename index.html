@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Link de Pago</title>
+</head>
+<body style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
+    <h2>Generar Link de Pago</h2>
+
+    <input type="text" id="clienteId" placeholder="ID Cliente" style="padding: 10px; margin: 5px;"><br>
+    <input type="text" id="clienteNombre" placeholder="Nombre Cliente" style="padding: 10px; margin: 5px;"><br>
+    <input type="email" id="clienteEmail" placeholder="Correo Cliente" style="padding: 10px; margin: 5px;"><br>
+    <input type="number" id="valorPago" placeholder="Valor del Pago" style="padding: 10px; margin: 5px;"><br>
+
+    <button onclick="enviarDatos()" style="padding: 10px; margin-top: 10px;">Generar Link y Enviar</button>
+
+    <script>
+        async function enviarDatos() {
+            const clienteId = document.getElementById("clienteId").value;
+            const clienteNombre = document.getElementById("clienteNombre").value;
+            const clienteEmail = document.getElementById("clienteEmail").value;
+            const valorPago = document.getElementById("valorPago").value;
+
+            if (!clienteId || !clienteNombre || !clienteEmail || !valorPago) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            const webhookURL = "https://hook.make.com/TU-WEBHOOK"; // Reemplaza con la URL de tu Webhook en Make
+
+            const data = {
+                id: clienteId,
+                nombre: clienteNombre,
+                email: clienteEmail,
+                valor: parseFloat(valorPago)
+            };
+
+            try {
+                const response = await fetch(webhookURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert("Solicitud enviada correctamente. Revisa tu correo.");
+                } else {
+                    alert("Error al enviar la solicitud.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Ocurrió un error al procesar la solicitud.");
+            }
+        }
+    </script>
+</body>
+</html>
